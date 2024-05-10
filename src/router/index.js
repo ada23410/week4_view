@@ -16,8 +16,14 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
-    patch: '/posts',
-    component: () => import('../views/Home.vue')
+    path: '/index',
+    component: () => import('../views/Home.vue'),
+    children: [
+      {
+        path: 'posts',
+        component: () => import('../views/Posts.vue')
+      }
+    ]
   }
 ]
 
