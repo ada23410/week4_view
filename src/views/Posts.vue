@@ -1,5 +1,5 @@
 <template>
-    <div class="func-bar d-flex justify-content-between">
+    <div class="func-bar d-flex justify-content-between" ref="posts">
         <div class="col-md-2">
             <select class="form-select" id="country" required="">
                 <option value="">請選擇貼文排序</option>
@@ -40,21 +40,41 @@
 
 <script>
 export default ({
+  name: 'Posts',
+  inject: ['emitter'],
   data () {
     return {
-      posts: []
+      posts: [],
+      tempPost: {},
+      newPostData: {}
     }
   },
   methods: {
     getPosts () {
       const api = `${process.env.VUE_APP_API}posts/`
       this.$http.get(api).then((res) => {
-        console.log(res.data.data.posts)
+        // console.log(res.data.data.posts)
         this.posts = res.data.data.posts
+      })
+    },
+    updatePost (postData) {
+      const api = `${process.env.VUE_APP_API}posts/`
+      console.log('Updating post with data:', JSON.stringify(postData))
+      this.$http.post(api, postData).then((res) => {
+        console.log('Post updated successfully:', res.data)
+        this.getPosts()
+      }).catch((error) => {
+        console.error('Error updating post:', error.response ? error.response.data : error.message) // 更詳細的錯誤信息
+        console.error('Error details:', error.response)
       })
     }
   },
   created () {
+    this.emitter.on('updatePost', (postData) => {
+      // console.log(postData)
+      this.newPostData = { ...postData }
+      this.updatePost(this.newPostData)
+    })
     this.getPosts()
   }
 })

@@ -16,12 +16,18 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
-    path: '/index',
+    path: '/home',
     component: () => import('../views/Home.vue'),
     children: [
       {
         path: 'posts',
-        component: () => import('../views/Posts.vue')
+        component: () => import('../views/Posts.vue'),
+        props: true
+      },
+      {
+        path: 'addpost',
+        component: () => import('../views/AddPost.vue'),
+        props: true
       }
     ]
   }
