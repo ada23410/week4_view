@@ -37,7 +37,6 @@
 
 <script>
 export default {
-  inject: ['emitter'],
   data () {
     return {
       tempPosts: {
@@ -57,7 +56,7 @@ export default {
       }
       const postData = { ...this.tempPosts, tags: this.tempPosts.tags.split(',') }
       console.log('Submitting post:', JSON.stringify(postData))
-      this.emitter.emit('updatePost', postData)
+      this.$root.emitter.emit('updatePost', postData)
       this.$router.push('/home/posts')
     }
   }
