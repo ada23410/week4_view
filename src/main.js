@@ -15,7 +15,7 @@ library.add(fas)
 const emitter = mitt()
 const app = createApp(App)
 
-app.config.globalProperties.emitter = emitter // 全局設置
+app.config.globalProperties.emitter = emitter
 
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.use(VueAxios, axios)

@@ -11,6 +11,7 @@
                     <div class="card">
                         <div class="list-group list-group-flush">
                             <router-link to="/home/addpost" class="list-group-item list-group-item-action p-3">
+                                <font-awesome-icon class="bars me-2" icon="fas fa-plus"/>
                                 張貼動態
                             </router-link>
                             <a class="list-group-item list-group-item-action p-3">

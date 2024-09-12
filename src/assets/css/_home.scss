@@ -1,16 +1,17 @@
 .main {
     .card{
+        margin-bottom: 2rem;
         .card-body{
             .name{
-                font-size: 14px;
-                font-weight: $font-weight-medium;
+                font-size: 1rem;
+                font-weight: $font-weight-bold;
             }
             .time{
-                font-size: 11px;
+                font-size: .7rem;
                 color: $gray-500;
             }
             .card-text{
-                font-size: 16px;
+                font-size: 1rem;
                 font-weight: $font-weight-normal;
             }
         }

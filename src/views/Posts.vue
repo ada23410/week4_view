@@ -63,12 +63,15 @@ export default ({
     getPosts () {
       const api = `${process.env.VUE_APP_API}posts/`
       this.$http.get(api).then((res) => {
-        console.log(res.data)
+        console.log(res.data.data)
         if (res.data.data.posts.length === 0) {
-          this.message = res.data.message // 假設 API 回應中包含訊息
+          this.message = res.data.message
           this.posts = []
         } else {
-          this.posts = res.data.data.posts
+          this.posts = res.data.data.posts.map(post => ({
+            ...post,
+            user: post.user || { photo: 'path/to/default/image.jpg', name: 'Unknown User' }
+          }))
           this.message = ''
         }
       }).catch((error) => {

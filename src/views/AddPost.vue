@@ -9,15 +9,15 @@
             <form @submit.prevent="submitPost">
               <div class="mt-3">
                 <label for="post-content" class="form-label">貼文內容</label>
-                <textarea class="form-control" id="post-content" rows="3" v-model="tempPosts.content"></textarea>
+                <textarea class="form-control" id="post-content" rows="3" v-model="tempPosts.content" placeholder="請輸入內容"></textarea>
               </div>
               <div class="mt-3">
                 <label for="post-image" class="form-label">圖片網址</label>
-                <input type="text" class="form-control" id="post-image" v-model="tempPosts.image">
+                <input type="text" class="form-control" id="post-image" v-model="tempPosts.image" placeholder="請放入圖片網址">
               </div>
               <div class="mt-3">
-                <label for="post-tag" class="form-label">標註</label>
-                <input type="text" class="form-control" id="post-tag" v-model="tempPosts.tags">
+                <label for="post-tag" class="form-label">標註<small>（請使用逗號當作分隔）</small></label>
+                <input type="text" class="form-control" id="post-tag" v-model="tempPosts.tags" placeholder="請輸入貼文tag">
               </div>
               <div class="mt-3">
                 <select class="form-select" aria-label="Default select example" v-model="tempPosts.type">
