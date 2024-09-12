@@ -60,9 +60,24 @@ export default ({
     }
   },
   methods: {
+    getToken () {
+      const value = `; ${document.cookie}`
+      const parts = value.split('; uid=')
+      if (parts.length === 2) return parts.pop().split(';').shift()
+      return null
+    },
     getPosts () {
       const api = `${process.env.VUE_APP_API}posts/`
-      this.$http.get(api).then((res) => {
+      const token = this.getToken()
+      if (!token) {
+        this.message = '請先登入以查看貼文'
+        return
+      }
+      this.$http.get(api, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }).then((res) => {
         console.log(res.data.data)
         if (res.data.data.posts.length === 0) {
           this.message = res.data.message
@@ -81,8 +96,17 @@ export default ({
     },
     updatePost (postData) {
       const api = `${process.env.VUE_APP_API}posts/`
+      const token = this.getToken()
+      if (!token) {
+        this.message = '請先登入以更新貼文'
+        return
+      }
       console.log('Updating post with data:', JSON.stringify(postData))
-      this.$http.post(api, postData).then((res) => {
+      this.$http.post(api, postData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }).then((res) => {
         console.log('Post updated successfully:', res.data)
         this.getPosts()
       }).catch((error) => {
@@ -91,33 +115,56 @@ export default ({
       })
     },
     sortByDate (order) {
-      if (order === 'desc') {
-        const api = `${process.env.VUE_APP_API}posts/?timeSort=${order}`
-        this.$http.get(api).then((res) => {
-          this.posts = res.data.data.posts
-        })
-      } else if (order === 'asc') {
-        const api = `${process.env.VUE_APP_API}posts/?timeSort=${order}`
-        this.$http.get(api).then((res) => {
-          this.posts = res.data.data.posts
-        })
+      const token = this.getToken()
+      if (!token) {
+        this.message = '請先登入以排序貼文'
+        return
       }
+      const api = `${process.env.VUE_APP_API}posts/?timeSort=${order}`
+      this.$http.get(api, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }).then((res) => {
+        this.posts = res.data.data.posts
+      }).catch((error) => {
+        console.error('Error sorting posts:', error)
+        this.message = '排序貼文時發生錯誤'
+      })
     },
     searchPost () {
+      const token = this.getToken()
+      if (!token) {
+        this.message = '請先登入以搜尋貼文'
+        return
+      }
       const keyword = this.searchQuery
       const api = `${process.env.VUE_APP_API}posts/?q=${keyword}`
-      this.$http.get(api).then((res) => {
+      this.$http.get(api, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }).then((res) => {
         this.posts = res.data.data.posts
+      }).catch((error) => {
+        console.error('Error searching posts:', error)
+        this.message = '搜尋貼文時發生錯誤'
       })
     }
   },
   created () {
-    this.$root.emitter.on('updatePost', (postData) => {
-      // console.log(postData)
-      this.tempPost = { ...postData }
-      this.updatePost(this.tempPost)
-    })
-    this.getPosts()
+    const token = this.getToken()
+    if (!token) {
+      this.message = '請先登入以查看貼文'
+      // 可能需要重定向到登入頁面
+      // this.$router.push('/login');
+    } else {
+      this.$root.emitter.on('updatePost', (postData) => {
+        this.tempPost = { ...postData }
+        this.updatePost(this.tempPost)
+      })
+      this.getPosts()
+    }
   }
 })
 </script>

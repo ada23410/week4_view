@@ -16,12 +16,21 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
+    path: '/login',
+    component: () => import('../views/Login.vue')
+  },
+  {
     path: '/home',
     component: () => import('../views/Home.vue'),
     children: [
       {
         path: 'posts',
         component: () => import('../views/Posts.vue'),
+        props: true
+      },
+      {
+        path: 'profile',
+        component: () => import('../views/UserInfo.vue'),
         props: true
       },
       {
