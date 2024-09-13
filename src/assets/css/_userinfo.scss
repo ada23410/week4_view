@@ -1,0 +1,56 @@
+.main{
+    .card {
+        a {
+            &.active {
+                border-bottom: 2px solid #202121;
+            }
+        } 
+        .nav-link {
+            color: rgb(110, 110, 110);
+            font-weight: 500;  
+        &:hover {
+            color: #202121;
+        }
+        }
+        .nav-pills {
+        .nav-link {
+            &.active {
+                color: black;
+                background-color: white;
+                border-radius: 0.5rem 0.5rem 0 0;
+                font-weight: 600;
+            }
+        }
+        }
+        .tab-content {
+            padding-bottom: 1.3rem;
+        }
+        .form-control {
+            background-color: rgb(241, 243, 247);
+            border: none;
+        }
+        .img-wrap {
+            width: 200px;
+            height: 200px;
+            border-radius: 100px;
+            margin: 0 auto 1rem;
+            overflow: hidden;
+            .card-img-top {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+        .upload{
+            display: block;
+            width: 5rem;
+            margin: 0 auto;
+            font-size: .9rem;
+        }
+        .card-body {
+            width: 22rem;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+    }
+}
