@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="user-info">
     <div class="card">
       <!-- nav options -->
       <ul class="nav nav-pills mb-3 mt-2 shadow-sm" id="pills-tab" role="tablist">
@@ -32,12 +32,22 @@
             >
             <div class="img-wrap">
                 <img
-                  src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                  class="card-img-top"
-                  alt="..."
+                    :src="imageUrl"
+                    class="card-img-top"
+                    alt="Profile Image"
                 />
             </div>
-            <a href="#" class="btn btn-primary upload">上傳</a>
+            <input
+                type="file"
+                ref="fileInput"
+                @change="handleFileChange"
+                accept="image/*"
+                style="display: none;"
+            />
+            <div class="row justify-content-center">
+                <button @click="triggerFile" class="btn btn-primary upload">選擇圖片</button>
+                <button @click="uploadImage" class="btn btn-success upload ml-2">上傳圖片</button>
+            </div>
             <div class="card-body">
                 <div class="row g-4 align-items-center mt-1">
                     <div class="col-auto">
@@ -95,7 +105,7 @@
                   </div>
                 </div>
                 <div class="row justify-content-center mt-5">
-                    <button type="button" class="btn btn-primary" @click="changeInfo">送出更新</button>
+                    <button type="button" class="btn btn-primary" @click="changeInfo()">送出更新</button>
                 </div>
               </div>
             </div>
@@ -146,7 +156,9 @@ export default {
         sex: ''
       },
       newPassword: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      file: null,
+      imageUrl: null
     }
   },
   watch: {
@@ -174,20 +186,28 @@ export default {
           Authorization: `Bearer ${token}`
         }
       }).then((res) => {
-        // console.log(res.data.data)
+        // console.log(res.data)
         this.user = res.data.data
+        this.imageUrl = this.user.photo
       })
     },
-    changeInfo () {
+    changeInfo (imageUrl = null) {
       const api = `${process.env.VUE_APP_API}users/profile`
       const token = this.getToken()
       if (!token) {
         this.message = '請先登入才能修改個人資訊'
       }
-      this.$http.patch(api, {
+
+      const user = {
         name: this.user.name,
         sex: this.user.sex
-      }, {
+      }
+
+      if (imageUrl && typeof imageUrl === 'string') {
+        user.photo = imageUrl
+      }
+
+      this.$http.patch(api, user, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -195,6 +215,9 @@ export default {
         // console.log(res)
         console.log('個人資訊更新成功', res)
         this.user = { ...this.user, ...res.data.data }
+        if (imageUrl && typeof imageUrl === 'string') {
+          this.imageUrl = imageUrl
+        }
       })
     },
     changePassword () {
@@ -217,6 +240,65 @@ export default {
         alert('密碼修改成功')
         this.newPassword = ''
         this.confirmPassword = ''
+      })
+    },
+    validateFile (file) {
+      const validTypes = ['image/jpeg', 'image/png']
+      const maxSize = 2 * 1024 * 1024 // 2MB
+      if (!validTypes.includes(file.type)) {
+        this.$notify({
+          type: 'error',
+          title: '檔案類型錯誤',
+          message: '只能上傳 JPG 或 PNG 格式的圖片'
+        })
+        return false
+      }
+      if (file.size > maxSize) {
+        this.$notify({
+          type: 'error',
+          title: '檔案太大',
+          message: '圖片大小不能超過 2MB'
+        })
+        return false
+      }
+      return true
+    },
+    handleFileChange (event) {
+      const file = event.target.files[0]
+      if (file && this.validateFile(file)) {
+        this.file = file
+        this.previewImage(file)
+      }
+    },
+    triggerFile () {
+      this.$refs.fileInput.click()
+    },
+    previewImage (file) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        this.imageUrl = e.target.result
+      }
+      reader.readAsDataURL(file)
+    },
+    uploadImage () {
+      const formData = new FormData()
+      formData.append('file', this.file)
+
+      const api = `${process.env.VUE_APP_API}upload/file`
+      const token = this.getToken()
+      this.$http.post(api, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        }
+      }).then((res) => {
+        console.log('Upload response:', res)
+        if (res.data && res.data.data && res.data.data.fileUrl) {
+          console.log('Calling changeInfo with URL:', res.data.fileUrl)
+          this.changeInfo(res.data.data.fileUrl)
+        } else {
+          console.error('Invalid file URL received:', res.data)
+        }
       })
     },
     switchTab (tab) {

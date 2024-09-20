@@ -1,4 +1,4 @@
-.main{
+.user-info{
     .card {
         a {
             &.active {
@@ -43,8 +43,7 @@
         }
         .upload{
             display: block;
-            width: 5rem;
-            margin: 0 auto;
+            width: 6rem;
             font-size: .9rem;
         }
         .card-body {

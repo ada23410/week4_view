@@ -51,7 +51,7 @@ export default {
         console.log(res.data)
         if (res.data.status === 'success') {
           const token = res.data.user.token
-          console.log(token)
+          // console.log(token)
           document.cookie = `uid=${token}; path=/`
           this.$router.push('/home/posts')
         }
