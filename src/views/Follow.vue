@@ -2,16 +2,17 @@
     <div class="follow">
         <div class="container">
             <div class="row">
+                <h5 class="card-title mb-3">追蹤名單</h5>
                 <div class="col-md-12">
-                    <div class="list">
+                    <div class="list mb-2" v-for="item in followList" :key="item._id">
                         <div class="img-wrap">
-                            <img src="" alt="">
+                            <img :src="item.user.photo" alt="">
                         </div>
                         <div class="user-info">
-                            <div class="name">User</div>
+                            <div class="name">{{ item.user.name }}</div>
                             <div class="follow-time">
-                                <div class="time">追蹤時間：2024/11/03</div>
-                                <div class="already-follow-time">您已追蹤90天</div>
+                                <div class="time">追蹤時間：{{ item.createdAt }}</div>
+                                <div class="already-follow-time">{{ $filters.daysSince(item.createdAt) }}天</div>
                             </div>
                         </div>
                     </div>
@@ -47,7 +48,8 @@ export default {
           Authorization: `Bearer ${token}`
         }
       }).then((res) => {
-        console.log(res.data)
+        console.log(res.data.data)
+        this.followList = res.data.data
       })
     }
   },
