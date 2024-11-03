@@ -2,14 +2,14 @@
 <template>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container">
-            <a class="navbar-brand" href="#">MetaWall</a>
+            <router-link to="/home/posts" class="navbar-brand" href="#">MetaWall</router-link>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <a href="#" class="d-block link-body-emphasis text-decoration-none">
+            <router-link to="/home/profile" class="p-3">
                 <img :src="imageUrl" alt="mdo" width="32" height="32" class="rounded-circle me-2">
-                <span>{{ user.name }}</span>
-            </a>
+                <span>{{ user.name  }}</span>
+            </router-link>
         </div>
     </nav>
 </template>

@@ -9,10 +9,10 @@
                 <img :src="imageUrl" alt="mdo" width="32" height="32" class="rounded-circle me-2">
                 <span>{{ user.name  }}</span>
             </router-link>
-            <a class="list-group-item list-group-item-action p-3">
+            <router-link to="/home/follow" class="list-group-item list-group-item-action p-3">
                 <font-awesome-icon class="bars me-2" icon="fas fa-bell"/>
                 <span>追蹤名單</span>
-            </a>
+            </router-link>
             <a class="list-group-item list-group-item-action p-3">
                 <font-awesome-icon class="bars me-2" icon="fas fa-thumbs-up"/>
                 <span>我按讚的文章</span>

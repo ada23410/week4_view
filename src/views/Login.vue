@@ -26,9 +26,6 @@
                       v-model="user.password"
                   />
                 </div>
-                <div class="mb-2 text-end">
-                  <a href="">忘記密碼？</a>
-                </div>
                 <div class="text-end mt-4 mb-2">
                   <button class="btn btn-primary btn-block w-100" type="submit">登入</button>
                 </div>

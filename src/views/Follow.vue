@@ -1,0 +1,63 @@
+<template>
+    <div class="follow">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="list">
+                        <div class="img-wrap">
+                            <img src="" alt="">
+                        </div>
+                        <div class="user-info">
+                            <div class="name">User</div>
+                            <div class="follow-time">
+                                <div class="time">追蹤時間：2024/11/03</div>
+                                <div class="already-follow-time">您已追蹤90天</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      message: '',
+      followList: []
+    }
+  },
+  methods: {
+    getToken () {
+      const value = `; ${document.cookie}`
+      const parts = value.split('; uid=')
+      if (parts.length === 2) return parts.pop().split(';').shift()
+      return null
+    },
+    getFollowList () {
+      const api = `${process.env.VUE_APP_API}users/following`
+      const token = this.getToken()
+      if (!token) {
+        this.message = '請先登入以查看追蹤列表'
+      }
+      this.$http.get(api, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }).then((res) => {
+        console.log(res.data)
+      })
+    }
+  },
+  created () {
+    const token = this.getToken()
+    if (!token) {
+      this.message = '請先登入以查看追蹤列表'
+    } else {
+      this.getFollowList()
+    }
+  }
+}
+</script>
