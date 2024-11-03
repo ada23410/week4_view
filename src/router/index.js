@@ -20,6 +20,10 @@ const routes = [
     component: () => import('../views/Login.vue')
   },
   {
+    path: '/signup',
+    component: () => import('../views/SignUp.vue')
+  },
+  {
     path: '/home',
     component: () => import('../views/Home.vue'),
     children: [

@@ -1,15 +1,27 @@
 <template>
     <div class="container mt-5">
-        <form class="row justify-content-center" @submit.prevent="singIn">
+        <form class="row justify-content-center" @submit.prevent="signUp">
             <div class="col-md-4">
-                <h1 class="h3 mb-4 font-weight-normal text-center">請先登入</h1>
+                <h1 class="h3 mb-4 font-weight-normal text-center">註冊</h1>
+                <div class="mb-2">
+                  <label for="inputEmail" class="sr-only">name</label>
+                  <input
+                      type="text"
+                      id="inputName"
+                      class="form-control"
+                      placeholder="Aida"
+                      required
+                      autofocus
+                      v-model="user.name"
+                  />
+                </div>
                 <div class="mb-2">
                   <label for="inputEmail" class="sr-only">Email address</label>
                   <input
                       type="email"
                       id="inputEmail"
                       class="form-control"
-                      placeholder="Email address"
+                      placeholder="example@mail.com"
                       required
                       autofocus
                       v-model="user.email"
@@ -26,14 +38,22 @@
                       v-model="user.password"
                   />
                 </div>
-                <div class="mb-2 text-end">
-                  <a href="">忘記密碼？</a>
+                <div class="mb-2">
+                  <label for="inputPassword" class="sr-only">Confirm Password</label>
+                  <input
+                      type="password"
+                      id="inputConfirmPassword"
+                      class="form-control"
+                      placeholder="Confirm Password"
+                      required
+                      v-model="user.confirmPassword"
+                  />
                 </div>
                 <div class="text-end mt-4 mb-2">
-                  <button class="btn btn-primary btn-block w-100" type="submit">登入</button>
+                  <button class="btn btn-primary btn-block w-100" type="submit">註冊</button>
                 </div>
                 <div class="mb-2 text-center">
-                  <div>還沒有帳號嗎？<router-link to="/signup">註冊</router-link></div>
+                  <div><router-link to="/login">登入</router-link></div>
                 </div>
             </div>
         </form>
@@ -45,26 +65,27 @@ export default {
   data () {
     return {
       user: {
+        name: '',
         email: '',
-        password: ''
+        password: '',
+        confirmPassword: ''
       }
     }
   },
   methods: {
-    singIn () {
-      const api = `${process.env.VUE_APP_API}users/sign_in`
+    signUp () {
+      const api = `${process.env.VUE_APP_API}users/sign_up`
       this.$http.post(api, this.user).then((res) => {
         console.log(res.data)
         if (res.data.status === 'success') {
           const token = res.data.user.token
-          // console.log(token)
           document.cookie = `uid=${token}; path=/`
-          this.$router.push('/home/posts')
-        } else {
-          console.log('Login failed:', res.data.message)
+          alert('註冊成功！請重新登入了。')
+          this.$router.push('/login')
+          this.user = {}
         }
       }).catch((error) => {
-        console.error(error.response.data.message)
+        console.error(error)
         const errorMsg = error.response.data.message
         alert(errorMsg)
       })

@@ -7,9 +7,49 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <a href="#" class="d-block link-body-emphasis text-decoration-none">
-                <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="mdo" width="32" height="32" class="rounded-circle me-2">
-                <span>User</span>
+                <img :src="imageUrl" alt="mdo" width="32" height="32" class="rounded-circle me-2">
+                <span>{{ user.name }}</span>
             </a>
         </div>
     </nav>
 </template>
+
+<script>
+export default {
+  data () {
+    return {
+      user: {},
+      imageUrl: null
+    }
+  },
+  methods: {
+    getToken () {
+      const value = `; ${document.cookie}`
+      const parts = value.split('; uid=')
+      if (parts.length === 2) return parts.pop().split(';').shift()
+      return null
+    },
+    getProfile () {
+      const api = `${process.env.VUE_APP_API}users/profile`
+      const token = this.getToken()
+      // console.log(token)
+      if (!token) {
+        this.message = '請先登入才能檢視個人資訊'
+        return
+      }
+      this.$http.get(api, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }).then((res) => {
+        console.log(res.data)
+        this.user = res.data.data
+        this.imageUrl = this.user.photo
+      })
+    },
+    created () {
+      this.getProfile()
+    }
+  }
+}
+</script>
