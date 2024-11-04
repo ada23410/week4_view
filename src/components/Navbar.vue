@@ -6,10 +6,17 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <router-link to="/home/profile" class="p-3">
-                <img :src="imageUrl" alt="mdo" width="32" height="32" class="rounded-circle me-2">
+            <div class="dropdown">
+              <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img :src="imageUrl" width="32" height="32" class="rounded-circle me-2">
                 <span>{{ user.name  }}</span>
-            </router-link>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">我的貼文牆</a></li>
+                <li><router-link to="/home/profile" class="dropdown-item" href="#">修改個人資料</router-link></li>
+                <li><a class="dropdown-item" href="#" @click.prevent="logout">登出</a></li>
+              </ul>
+            </div>
         </div>
     </nav>
 </template>
@@ -47,9 +54,23 @@ export default {
         this.imageUrl = this.user.photo
       })
     },
-    created () {
-      this.getProfile()
+    clearToken () {
+      if (localStorage.getItem('token')) {
+        localStorage.removeItem('token')
+      }
+      if (sessionStorage.getItem('token')) {
+        sessionStorage.removeItem('token')
+      }
+      document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+    },
+    logout () {
+      this.clearToken()
+      alert('已成功登出!')
+      this.$router.push('/login')
     }
+  },
+  created () {
+    this.getProfile()
   }
 }
 </script>
