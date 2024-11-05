@@ -39,6 +39,25 @@
               <div class="card-img-bottom">
                   <img :src="item.image" alt="...">
               </div>
+              <div class="card-body">
+                <div class="like">
+                  <a class="list-group-item list-group-item-action">
+                    <font-awesome-icon class="bars me-2" icon="fas fa-thumbs-up"/>
+                    <span>1</span>
+                  </a>
+                </div>
+                <div class="comment">
+                  <div class="img-wrap">
+                    <img :src="item.user.photo" alt="mdo">
+                  </div>
+                  <div class="comment-input">
+                    <div class="input-group">
+                      <input type="text" class="form-control" placeholder="請輸入留言" for="comment" v-model="comment">
+                      <button class="btn btn-outline-secondary" type="button" id="comment" @click="submitComment(item._id)">留言</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
           </div>
         </div>
     </div>
@@ -57,7 +76,8 @@ export default ({
       tempPost: {},
       selectAnswer: '',
       searchQuery: '',
-      message: ''
+      message: '',
+      comment: ''
     }
   },
   watch: {
@@ -118,6 +138,29 @@ export default ({
         this.getPosts()
       }).catch((error) => {
         console.error('Error details:', error.response)
+        this.message = '發生錯誤，請稍後再試。'
+      })
+    },
+    submitComment (postId) {
+      // console.log(postId)
+      const token = this.getToken()
+      if (!token) {
+        this.message = '請先登入以留言'
+      }
+      const api = `${process.env.VUE_APP_API}posts/${postId}/comment`
+      const commentData = {
+        comment: this.comment
+      }
+      this.$http.post(api, commentData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }).then((res) => {
+        console.log('Comment submitted successfully:', res.data)
+        this.comment = ''
+        this.getPosts()
+      }).catch((error) => {
+        console.error('Error submitting comment:', error.response)
         this.message = '發生錯誤，請稍後再試。'
       })
     },
