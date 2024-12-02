@@ -57,6 +57,16 @@
                     </div>
                   </div>
                 </div>
+                <div class="comment-display" v-for="comment in item.commentsV" :key="comment._id">
+                  <div class="img-wrap">
+                    <img :src="comment.user.photo || 'path/to/default/image.jpg'" alt="mdo">
+                  </div>
+                  <div class="user-info">
+                    <div class="name">{{ comment.user.name }}</div>
+                    <div class="time">{{ new Date(comment.createdAt).toLocaleString() }}</div>
+                    <div class="content">{{ comment.comment }}</div>
+                  </div>
+                </div>
               </div>
           </div>
         </div>
@@ -112,7 +122,8 @@ export default ({
         } else {
           this.posts = res.data.data.posts.map(post => ({
             ...post,
-            user: post.user || { photo: 'path/to/default/image.jpg', name: 'Unknown User' }
+            user: post.user || { photo: 'path/to/default/image.jpg', name: 'Unknown User' },
+            commentsV: post.commentsV || [] // 確保 commentsV 存在
           }))
           this.message = ''
         }
