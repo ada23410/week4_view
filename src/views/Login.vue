@@ -24,6 +24,7 @@
                       placeholder="Password"
                       required
                       v-model="user.password"
+                      autocomplete="current-password"
                   />
                 </div>
                 <div class="text-end mt-4 mb-2">
