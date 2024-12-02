@@ -12,8 +12,8 @@
                 <span>{{ user.name  }}</span>
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">我的貼文牆</a></li>
-                <li><router-link to="/home/profile" class="dropdown-item" href="#">修改個人資料</router-link></li>
+                <li><router-link :to="user.id ? `/home/myposts/${user.id}` : '/login'" class="dropdown-item">我的貼文牆</router-link></li>
+                <li><router-link to="/home/profile" class="dropdown-item">修改個人資料</router-link></li>
                 <li><a class="dropdown-item" href="#" @click.prevent="logout">登出</a></li>
               </ul>
             </div>
@@ -49,7 +49,7 @@ export default {
           Authorization: `Bearer ${token}`
         }
       }).then((res) => {
-        console.log(res.data)
+        console.log(res.data.data)
         this.user = res.data.data
         this.imageUrl = this.user.photo
       })
@@ -70,7 +70,13 @@ export default {
     }
   },
   created () {
-    this.getProfile()
+    const token = this.getToken()
+    if (!token) {
+      alert('請先登入')
+      this.$router.push('/login')
+    } else {
+      this.getProfile()
+    }
   }
 }
 </script>

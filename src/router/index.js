@@ -46,6 +46,11 @@ const routes = [
         path: 'follow',
         component: () => import('../views/Follow.vue'),
         props: true
+      },
+      {
+        path: 'myposts/:userId',
+        component: () => import('../views/UserPosts.vue'),
+        props: true
       }
     ]
   }
