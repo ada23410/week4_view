@@ -49,7 +49,7 @@ export default {
           Authorization: `Bearer ${token}`
         }
       }).then((res) => {
-        console.log(res.data.data)
+        console.log(res.data)
         this.user = res.data.data
         this.imageUrl = this.user.photo
       })

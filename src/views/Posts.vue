@@ -1,7 +1,4 @@
 <template>
-    <div class="mb-3">
-      <follow></follow>
-    </div>
     <div class="func-bar d-flex justify-content-between" ref="posts">
         <div class="col-md-2">
             <select class="form-select" id="country" v-model="selectAnswer">
@@ -74,11 +71,7 @@
 </template>
 
 <script>
-import follow from '@/components/Follow.vue'
 export default ({
-  components: {
-    follow
-  },
   name: 'Posts',
   data () {
     return {

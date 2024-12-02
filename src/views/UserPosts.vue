@@ -1,5 +1,8 @@
 <template>
-    <div class="func-bar d-flex justify-content-between" ref="myposts">
+    <!-- <div class="mb-3">
+      <Follow></Follow>
+    </div> -->
+    <div class="func-bar d-flex justify-content-between" ref="MyPosts">
         <div class="col-md-2">
             <select class="form-select" id="country">
                 <option value="">請選擇貼文排序</option>
@@ -41,7 +44,11 @@
     </div>
 </template>
 <script>
+// import Follow from '@/components/Follow.vue'
 export default ({
+  // components: {
+  //   Follow
+  // },
   name: 'MyPosts',
   props: ['userId'], // 接受路由的參數
   data () {
@@ -51,9 +58,14 @@ export default ({
     }
   },
   methods: {
+    getToken () {
+      const value = `; ${document.cookie}`
+      const parts = value.split('; uid=')
+      if (parts.length === 2) return parts.pop().split(';').shift()
+      return null
+    },
     getMyPosts (userId) {
       const api = `${process.env.VUE_APP_API}posts/user/${userId}`
-      console.log(api)
       this.$http.get(api).then((res) => {
         console.log(res.data)
         if (res.data.data.posts.length === 0) {
@@ -68,14 +80,36 @@ export default ({
         this.message = '發生錯誤，請稍後再試。'
       })
     }
+    // getMyFollowing () {
+    //   const api = `${process.env.VUE_APP_API}users/following`
+    //   const token = this.getToken()
+    //   if (!token) {
+    //     this.message = '請先登入才能檢視個人資訊'
+    //     return
+    //   }
+    //   this.$http.get(api, {
+    //     headers: {
+    //       Authorization: `Bearer ${token}`
+    //     }
+    //   }).then((res) => {
+    //     console.log(res.data)
+    //   })
+    // }
   },
   created () {
-    const userId = this.$route.params.userId // 從路由參數獲取 userId
-    if (userId) {
-      console.log('Initial userId from route:', userId)
-      this.getMyPosts(userId)
-    } else {
+    const token = this.getToken()
+    const userId = this.$route.params.userId
+
+    if (!token) {
+      alert('請先登入')
+      this.$router.push('/login')
+    } else if (!userId) {
       this.message = '無法獲取用戶 ID，請稍後再試'
+    } else {
+      // 如果已登入且有 userId，執行必要操作
+      console.log('Initial userId from route:', userId)
+      // this.getMyFollowing()
+      this.getMyPosts(userId) // 獲取貼文
     }
   }
 })
