@@ -51,6 +51,11 @@ const routes = [
         path: 'myposts/:userId',
         component: () => import('../views/UserPosts.vue'),
         props: true
+      },
+      {
+        path: 'like/:userId',
+        component: () => import('../views/UserLike.vue'),
+        props: true
       }
     ]
   }

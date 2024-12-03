@@ -13,10 +13,10 @@
                 <font-awesome-icon class="bars me-2" icon="fas fa-bell"/>
                 <span>追蹤名單</span>
             </router-link>
-            <a class="list-group-item list-group-item-action p-3">
+            <router-link :to="user.id ? `/home/like/${user.id}` : '/login'" class="list-group-item list-group-item-action p-3">
                 <font-awesome-icon class="bars me-2" icon="fas fa-thumbs-up"/>
                 <span>我按讚的文章</span>
-            </a>
+            </router-link>
         </div>
     </div>
 </template>
