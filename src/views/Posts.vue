@@ -25,7 +25,7 @@
                       <img :src="item.user.photo" alt="mdo" width="32" height="32" class="rounded-circle me-2">
                       <div class="post-info">
                           <div class="name">{{ item.user.name }}</div>
-                          <div class="time">2024/05/07 12:00</div>
+                          <div class="time">{{ new Date(item.createdAt).toLocaleString() }}</div>
                       </div>
                   </div>
                   <p class="card-text">{{ item.content }}</p>

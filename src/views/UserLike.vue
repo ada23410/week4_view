@@ -19,10 +19,10 @@
                         <span>取消</span>
                         <font-awesome-icon class="bars" icon="fas fa-thumbs-up"/>
                     </button>
-                    <a type="button" class="btn btn-outline-secondary btn-sm">
-                       <span>查看</span>
-                       <font-awesome-icon class="bars" icon="fas fa-arrow-right"/>
-                    </a>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" @click="getOnePost(item.id)">
+                        <span>查看</span>
+                        <font-awesome-icon class="bars" icon="fas fa-arrow-right"/>
+                    </button>
                 </div>
             </div>
             </div>
@@ -82,6 +82,23 @@ export default ({
       }).then((res) => {
         console.log(res.data)
         this.getLikeList()
+      })
+    },
+    getOnePost (postId) {
+      const token = this.getToken()
+      if (!token) {
+        this.message = '請先登入以查看按讚貼文'
+        return
+      }
+
+      this.$router.push({
+        name: 'Post',
+        params:
+         {
+           postId: postId
+         }
+      }).catch(err => {
+        console.error('Router navigation error:', err)
       })
     }
   },

@@ -4,17 +4,17 @@
             <div class="row">
                 <h5 class="card-title mb-3">追蹤名單</h5>
                 <div class="col-md-12">
-                    <div class="list mb-2" v-for="item in followList" :key="item._id">
-                        <div class="user-info">
-                            <div class="img-wrap">
-                                <img :src="item.user.photo" alt="">
-                            </div>
-                            <div class="follow-time">
-                                <div class="name">{{ item.user.name }}</div>
-                                <div class="time">追蹤時間：{{ item.createdAt }}</div>
-                                <div class="already-follow-time">{{ $filters.daysSince(item.createdAt) }}天</div>
-                            </div>
+                  <div class="list mb-2" v-for="item in followList" :key="item._id">
+                      <div class="user-info">
+                        <div class="img-wrap">
+                          <img :src="item.user.photo || 'default-image.jpg'" alt="Profile Photo">
                         </div>
+                        <div class="follow-time">
+                          <div class="name">{{ item.user.name }}</div>
+                          <div class="time">追蹤時間：{{ item.createdAt }}</div>
+                          <div class="already-follow-time">{{ $filters.daysSince(item.createdAt) }}天</div>
+                        </div>
+                      </div>
                     </div>
                 </div>
             </div>
@@ -49,7 +49,7 @@ export default {
         }
       }).then((res) => {
         console.log(res.data.data)
-        this.followList = res.data.data
+        this.followList = res.data.data.filter(item => item.user)
       })
     }
   },

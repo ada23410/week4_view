@@ -33,6 +33,12 @@ const routes = [
         props: true
       },
       {
+        path: 'posts/:postId',
+        name: 'Post',
+        component: () => import('../views/Post.vue'),
+        props: true
+      },
+      {
         path: 'profile',
         component: () => import('../views/UserInfo.vue'),
         props: true
