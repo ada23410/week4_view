@@ -1,17 +1,24 @@
 <template>
     <div class="mb-3">
-      <div class="follow-card">
-        <div class="img-wrap">
-            <img src="" alt="">
-        </div>
-        <div class="user-info">
-            <div class="name">User</div>
-            <div class="follow-num">1,000追蹤</div>
-        </div>
-        <div>
-            <button type="submit" class="btn btn-primary mt-3 btn-sm">追蹤</button>
-        </div>
-      </div>
+      <swiper
+        :slides-per-view="6"
+        :space-between="10"
+        @swiper="onSwiper"
+        @slideChange="onSlideChange"
+      >
+        <SwiperSlide class="follow-card" v-for="item in unFollowed" :key="item.id">
+          <div class="img-wrap">
+              <img :src="item.photo" alt="photo">
+          </div>
+          <div class="user-info">
+              <div class="name">{{ item.name }}</div>
+              <!-- <div class="follow-num">{{ item.followers}}追蹤</div> -->
+          </div>
+          <div>
+              <button type="submit" class="btn btn-primary mt-3 btn-sm" @click="follow(item.id)">追蹤</button>
+          </div>
+        </SwiperSlide>
+      </swiper>
     </div>
     <div class="func-bar d-flex justify-content-between" ref="MyPosts">
         <div class="col-md-2">
@@ -55,7 +62,14 @@
     </div>
 </template>
 <script>
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import 'swiper/css'
+
 export default ({
+  components: {
+    Swiper,
+    SwiperSlide
+  },
   name: 'MyPosts',
   props: ['userId'], // 接受路由的參數
   data () {
@@ -63,7 +77,8 @@ export default ({
       posts: [],
       selectAnswer: '',
       searchQuery: '',
-      message: ''
+      message: '',
+      unFollowed: []
     }
   },
   watch: {
@@ -110,6 +125,22 @@ export default ({
       }).then((res) => {
         console.log(res.data)
         this.posts = res.data.data.posts
+      })
+    },
+    getMyunfollowed () {
+      const api = `${process.env.VUE_APP_API}users/unfollowed`
+      const token = this.getToken()
+      if (!token) {
+        this.message = '請先登入才能檢視未追蹤資料'
+        return
+      }
+      this.$http.get(api, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }).then((res) => {
+        console.log(res.data.data)
+        this.unFollowed = res.data.data
       })
     },
     sortByDate (order, userId) {
@@ -167,6 +198,36 @@ export default ({
         }
         this.posts = [] // 清空舊的貼文資料
       })
+    },
+    follow (userId) {
+      console.log(userId)
+      const api = `${process.env.VUE_APP_API}users/${userId}/follow`
+      console.log(api)
+      const token = this.getToken()
+      if (!token) {
+        this.message = '請先登入以查看為追蹤名單'
+        return
+      }
+      this.$http.post(api, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }).then((res) => {
+        console.log(res.data)
+        this.getMyunfollowed()
+      })
+    }
+  },
+  setup () {
+    const onSwiper = (swiper) => {
+      console.log(swiper)
+    }
+    const onSlideChange = () => {
+      console.log('slide change')
+    }
+    return {
+      onSwiper,
+      onSlideChange
     }
   },
   created () {
@@ -188,6 +249,7 @@ export default ({
     // this.getMyFollowing(userId) // 獲取他人資料
     this.getMyPosts(userId) // 獲取貼文
     this.sortByDate('desc', userId) // 預設載入排序
+    this.getMyunfollowed()
   }
 })
 </script>
