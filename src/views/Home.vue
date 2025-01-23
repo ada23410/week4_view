@@ -1,17 +1,19 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <Navbar></Navbar>
-    <div class="container">
-        <div class="mt-3">
-            <div class="row">
-                <div class="col-md-9">
-                    <router-view />
-                </div>
-                <div class="col-md-3">
-                    <Sidebar></Sidebar>
-                </div>
-            </div>
-        </div>
+    <div class="main-side">
+      <Navbar></Navbar>
+      <div class="container">
+          <div class="mt-3">
+              <div class="row">
+                  <div class="col-md-9">
+                      <router-view />
+                  </div>
+                  <div class="col-md-3">
+                      <Sidebar></Sidebar>
+                  </div>
+              </div>
+          </div>
+      </div>
     </div>
 </template>
 
